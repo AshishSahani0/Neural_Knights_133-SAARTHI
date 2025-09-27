@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meditation - Saarthi</title>
+<link rel="stylesheet" href="../css/meditation.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="logo">Saarthi</div>
+    <ul class="nav-links">
+      <li><a href="../home.html">Home</a></li>
+      <li><a href="../resources.html">Resources</a></li>
+      <li><a href="../resources/meditation.html" class="active">Meditation</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="exercise-list">
+  <h1>Meditation Exercises</h1>
+  <div class="cards">
+    <div class="card" onclick="openExercise('bodyScan')">
+      <img src="https://source.unsplash.com/80x80/?meditation,relax" alt="">
+      <h3>Body Scan Meditation</h3>
+      <p>Focus on different parts of your body to release tension.</p>
+    </div>
+    <div class="card" onclick="openExercise('mindfulness')">
+      <img src="https://source.unsplash.com/80x80/?mindfulness,meditation" alt="">
+      <h3>Mindfulness Meditation</h3>
+      <p>Be fully present with your thoughts, feelings, and sensations.</p>
+    </div>
+    <div class="card" onclick="openExercise('breathingFocus')">
+      <img src="https://source.unsplash.com/80x80/?breathing,calm" alt="">
+      <h3>Breathing Focus Meditation</h3>
+      <p>Concentrate on your breath to calm the mind.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Exercise Modal -->
+<div id="exerciseModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeExercise()">&times;</span>
+    <h2 id="exerciseTitle"></h2>
+    <div id="exerciseContent">
+      <!-- GIFs, video, instructions, and timer will load here -->
+    </div>
+    <div id="timerContainer">
+      <span id="timer">00:00</span>
+      <button onclick="startTimer()">Start</button>
+      <button onclick="resetTimer()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/neditation.js"></script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+/* 🌿 Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Nunito:wght@400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Quicksand", sans-serif;
+  line-height: 1.7;
+  background: #fafcff;
+  color: #2b2b2b;
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+/* 🌿 Navbar */
+header {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar {
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: "Nunito", sans-serif;
+  color: #7c73e6;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+.nav-links li a {
+  font-weight: 600;
+  position: relative;
+}
+
+.nav-links li a.active::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #7c73e6;
+  border-radius: 2px;
+}
+
+/* 🌿 Exercise List */
+.exercise-list {
+  max-width: 1200px;
+  margin: 5rem auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.exercise-list h1 {
+  font-size: 2.8rem;
+  margin-bottom: 2rem;
+  color: #4a4a4a;
+}
+
+.exercise-list .cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  padding: 1.8rem;
+  border-radius: 22px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.card img {
+  width: 80px;
+  margin-bottom: 1rem;
+}
+
+.card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.6rem;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #555;
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 12px 28px rgba(124,115,230,0.2);
+  background: linear-gradient(135deg, #f5f2ff, #e0c3fc);
+}
+
+/* 🌿 Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 25px;
+  max-width: 700px;
+  width: 90%;
+  position: relative;
+  text-align: center;
+  animation: fadeInScale 0.4s ease;
+}
+
+.modal-content img, .modal-content iframe {
+  border-radius: 20px;
+  margin: 1rem 0;
+  max-width: 100%;
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #7c73e6;
+  transition: 0.3s;
+}
+
+.close:hover {
+  color: #4a4a4a;
+}
+
+/* 🌿 Timer */
+#timerContainer {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+#timer {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #7c73e6;
+}
+
+#timerContainer button {
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  border-radius: 50px;
+  border: none;
+  background: linear-gradient(135deg, #a8edea, #fed6e3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#timerContainer button:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 20px rgba(124,115,230,0.4);
+}
+
+/* 🌿 Animations */
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 🌿 Responsive */
+@media (max-width: 768px) {
+  .exercise-list h1 {
+    font-size: 2rem;
+  }
+  .card img {
+    width: 65px;
+  }
+  #timer {
+    font-size: 1.5rem;
+  }
+}

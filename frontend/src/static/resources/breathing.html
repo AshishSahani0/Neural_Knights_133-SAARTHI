@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Breathing Exercises - Saarthi</title>
+  <link rel="stylesheet" href="../css/breathing.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<header>
+  <nav class="navbar">
+    <div class="logo">Saarthi</div>
+    <ul class="nav-links">
+      <li><a href="../home.html">Home</a></li>
+      <li><a href="../resources.html">Resources</a></li>
+      <li><a href="../resources/breathing.html" class="active">Breathing</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Interactive Breathing Exercises</h1>
+    <p>Follow step-by-step guided exercises with visuals, sound, and a timer to calm your mind.</p>
+  </div>
+</section>
+
+<!-- Exercise Selection -->
+<section class="exercise-list">
+  <h2>Choose Your Exercise</h2>
+  <select id="exerciseType">
+    <option value="4-7-8">4-7-8 Breathing</option>
+    <option value="Box">Box Breathing</option>
+  </select>
+  <div class="controls">
+    <button id="startBtn">Start</button>
+    <button id="pauseBtn">Pause</button>
+    <button id="resetBtn">Reset</button>
+    <button onclick="toggleVoice()" id="voiceBtn">🔊 Voice: On</button>
+    <button onclick="toggleAmbient()" id="ambientBtn">🎶 Ambient: On</button>
+  </div>
+</section>
+
+<!-- Exercise Panel -->
+<section class="exercise-panel">
+  <h2 id="exerciseName">Your Exercise</h2>
+  <div id="breathingCircle"></div>
+  <div id="instructionText">Select an exercise to begin</div>
+  <div id="timer">⏳ 0s</div>
+  <div class="progress-bar"><div class="progress"></div></div>
+  <ul id="stepsList"></ul>
+</section>
+
+<!-- Ambient Sound -->
+<audio id="ambientAudio" loop>
+  <source src="../assets/chims.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script src="../js/breathing.js"></script>
+</body>
+</html>
