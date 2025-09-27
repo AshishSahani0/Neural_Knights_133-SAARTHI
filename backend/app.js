@@ -81,6 +81,10 @@ app.use((err, req, res, next) => {
     message: err.message || "Internal Server Error",
   });
 });
+app.get("/healthz", (req, res) => {
+  res.status(200).send("OK");
+});
+
 
 // ------------------- EXPORT -------------------
 export { app, server };
