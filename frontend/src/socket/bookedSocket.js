@@ -19,7 +19,7 @@ const SOCKET_URL = import.meta.env.VITE_SOCKET_URL ;
 
 const bookedSocket = io(`${SOCKET_URL}/booked`, {
   autoConnect: false,
-  transports: ["websocket"],
+  transports: ["polling"],
   reconnection: true,
   reconnectionAttempts: 5,
   reconnectionDelay: 1000,
