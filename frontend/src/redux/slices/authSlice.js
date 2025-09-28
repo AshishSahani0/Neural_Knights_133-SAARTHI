@@ -131,7 +131,7 @@ export const updateProfile = createAsyncThunk(
   async (profileData, { rejectWithValue }) => {
     try {
       const { data } = await api.put("/user/update-profile", profileData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {"Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
       return data;
