@@ -15,7 +15,7 @@ import {
 } from "../redux/slices/videoSlice";
 import { toast } from "react-toastify";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || ;
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL ;
 
 const bookedSocket = io(`${SOCKET_URL}/booked`, {
   autoConnect: false,
@@ -25,6 +25,7 @@ const bookedSocket = io(`${SOCKET_URL}/booked`, {
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
   timeout: 20000,
+  withCredentials: true,
 });
 
 setTimeout(() => {
