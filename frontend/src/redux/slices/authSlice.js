@@ -53,6 +53,7 @@ export const loadUser = createAsyncThunk(
       const { data } = await api.get("/auth/me", { withCredentials: true });
       return data.user;
     } catch {
+      console.error("loadUser error:", err);
       return rejectWithValue(null);
     }
   }
