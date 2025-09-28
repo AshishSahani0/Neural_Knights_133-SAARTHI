@@ -19,6 +19,7 @@ const anonymousSocket = io(`${SOCKET_URL}/anonymous`, {
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
   timeout: 20000,
+   withCredentials: true,
 });
 
 // REMOVE: setTimeout block that forces the connection.
