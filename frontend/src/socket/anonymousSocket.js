@@ -13,7 +13,7 @@ const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
 const anonymousSocket = io(`${SOCKET_URL}/anonymous`, {
   autoConnect: false, // <-- This ensures it doesn't connect automatically
-  transports: ["websocket"],
+  transports: ["polling"],
   reconnection: true,
   reconnectionAttempts: 5,
   reconnectionDelay: 1000,
