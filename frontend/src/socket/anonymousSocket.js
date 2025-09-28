@@ -9,7 +9,7 @@ import {
 } from "../redux/slices/anonymousSlice";
 import { toast } from "react-toastify";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:5000";
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
 const anonymousSocket = io(`${SOCKET_URL}/anonymous`, {
   autoConnect: false, // <-- This ensures it doesn't connect automatically
