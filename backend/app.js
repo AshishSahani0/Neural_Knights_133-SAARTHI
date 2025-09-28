@@ -30,7 +30,7 @@ const server = http.createServer(app);
 // ------------------- SOCKET.IO -------------------
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "*",
+    origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   },
