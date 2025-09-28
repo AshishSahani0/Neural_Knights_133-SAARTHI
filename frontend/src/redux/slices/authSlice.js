@@ -50,10 +50,7 @@ export const loadUser = createAsyncThunk(
   "auth/loadUser",
   async (_, { rejectWithValue }) => {
     try {
-      const token = Cookies.get("token"); // fallback
-      const { data } = await api.get("/auth/me", {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
+      const { data } = await api.get("/auth/me", { withCredentials: true });
       return data.user;
     } catch(err) {
       console.error("loadUser error:", err);
