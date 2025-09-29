@@ -56,9 +56,7 @@ api.interceptors.response.use(
 
       try {
         const { data } = await axios.post(`${api.defaults.baseURL}/auth/refresh-token`, {}, { withCredentials: true });
-        
-        
-        
+        const newToken = data.token;
         processQueue(null, newToken);
 
         return api(originalRequest);
