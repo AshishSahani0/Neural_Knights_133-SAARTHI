@@ -1,5 +1,4 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 
 // Create Axios instance
@@ -25,10 +24,7 @@ const processQueue = (error, token = null) => {
 // Add Authorization header automatically if token exists
 api.interceptors.request.use(
   (config) => {
-    const token = Cookies.get("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+   
     return config;
   },
   (error) => Promise.reject(error)
@@ -51,10 +47,7 @@ api.interceptors.response.use(
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        }).then(token => {
-          originalRequest.headers.Authorization = `Bearer ${token}`;
-          return api(originalRequest);
-        });
+        }).then(() => api(originalRequest));
       }
 
       originalRequest._retry = true;
@@ -63,16 +56,15 @@ api.interceptors.response.use(
       try {
         const { data } = await axios.post(`${api.defaults.baseURL}/auth/refresh-token`, {}, { withCredentials: true });
         
-        const newToken = data.token;
-        Cookies.set("token", newToken, { expires: data.expiresIn || 7 });
-        api.defaults.headers.common["Authorization"] = `Bearer ${newToken}`;
+        
         
         processQueue(null, newToken);
 
         return api(originalRequest);
       } catch (refreshError) {
+         processQueue(refreshError, null);
         toast.error("Session expired. Please log in again.");
-        processQueue(refreshError, null);
+       
         window.location.href = "/login"; // Redirect to login
         return Promise.reject(refreshError);
       } finally {
