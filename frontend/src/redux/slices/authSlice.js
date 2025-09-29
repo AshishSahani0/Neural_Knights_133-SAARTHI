@@ -163,10 +163,12 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     const handlePending = (state) => { state.loading = true; };
-    const handleRejected = (state, { payload }) => {
-      state.loading = false;
-      if (payload?.message) toast.error(payload.message);
-    };
+    const handleRejected = (state, { payload, error }) => {
+  state.loading = false;
+  if (payload?.message) toast.error(payload.message);
+  else if (error?.message) toast.error(error.message);
+};
+
 
     builder
       // register / OTP
