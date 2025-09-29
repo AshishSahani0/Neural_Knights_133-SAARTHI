@@ -1,18 +1,18 @@
+// api.js
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
-// Create Axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  withCredentials: true, // required for cookies
+  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
+  withCredentials: true, // important for cookies
 });
 
-
+// Token refresh state
 let isRefreshing = false;
 let failedQueue = [];
 
 const processQueue = (error, token = null) => {
-  failedQueue.forEach(prom => {
+  failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
     } else {
@@ -22,55 +22,64 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
-// Add Authorization header automatically if token exists
+// Request interceptor: add token to headers
 api.interceptors.request.use(
   (config) => {
-   
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Global response interceptor for token refresh and error handling
+// Response interceptor: handle 401
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Check for 401 error and if it's not a refresh request
+    // Only handle 401 once per request
     if (error.response?.status === 401 && !originalRequest._retry) {
-      // Ignore 401 for /auth/me on app start, as it's expected
-      if (originalRequest?.url?.endsWith("/auth/me")) {
-        return Promise.reject(error);
-      }
-
-      // If a token refresh is already in progress, add the new request to the queue
       if (isRefreshing) {
-        return new Promise((resolve, reject) => {
+        // Queue requests while refreshing
+        return new Promise(function (resolve, reject) {
           failedQueue.push({ resolve, reject });
-        }).then(() => api(originalRequest));
+        })
+          .then((token) => {
+            originalRequest.headers["Authorization"] = `Bearer ${token}`;
+            return api(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
       }
 
       originalRequest._retry = true;
       isRefreshing = true;
 
       try {
-  const { data } = await axios.post(`${api.defaults.baseURL}/auth/refresh-token`, {}, { withCredentials: true });
-  const newToken = data.token; // <-- fix this
-  originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
-  processQueue(null, newToken);
-  return api(originalRequest);
-} catch (refreshError) {
-  processQueue(refreshError, null);
-  toast.error("Session expired. Please log in again.");
-  window.location.href = "/login";
-  return Promise.reject(refreshError);
-} finally {
-  isRefreshing = false;
-}
+        const { data } = await axios.post(
+          `${api.defaults.baseURL}/auth/refresh-token`,
+          {},
+          { withCredentials: true }
+        );
+        const newToken = data.token;
 
-    
-    // For other errors, just reject the promise
+        localStorage.setItem("token", newToken);
+        processQueue(null, newToken);
+
+        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+        toast.error("Session expired. Please log in again.");
+        window.location.href = "/login";
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
     return Promise.reject(error);
   }
 );
