@@ -54,7 +54,7 @@ export const loadUser = createAsyncThunk(
       return data.user;
     } catch(err) {
       console.error("loadUser error:", err);
-      return rejectWithValue(null);
+      return rejectWithValue({ message: "Failed to load user" });
     }
   }
 );
