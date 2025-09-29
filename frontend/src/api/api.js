@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || "http://localhost:5000/api",
+  baseURL: process.env.VITE_API_URL,
   withCredentials: true, // important for cookies
 });
 
@@ -39,20 +39,16 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    // Only handle 401 once per request
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        // Queue requests while refreshing
-        return new Promise(function (resolve, reject) {
-          failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers["Authorization"] = `Bearer ${token}`;
-            return api(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
-      }
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const res = await api.post("/auth/refresh-token");
+      localStorage.setItem("token", res.data.token);
+      originalRequest.headers["Authorization"] = "Bearer " + res.data.token;
+      return api(originalRequest);
+    }
+    return Promise.reject(error);
+  }
+);
 
       originalRequest._retry = true;
       isRefreshing = true;
