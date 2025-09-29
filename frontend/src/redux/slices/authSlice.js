@@ -11,6 +11,7 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (userData, { rejectWithValue }) => {
     try {
+      // The 'withCredentials: true' flag ensures the browser sends cookies automatically.
       const { data } = await api.post("/auth/register", userData, { withCredentials: true });
       return data;
     } catch (err) {
@@ -45,26 +46,27 @@ export const resendOtp = createAsyncThunk(
   }
 );
 
-// Load user
+// Load user (Verifies access token via cookie)
 export const loadUser = createAsyncThunk(
   "auth/loadUser",
   async (_, { rejectWithValue }) => {
     try {
+      // The browser sends the httpOnly 'token' cookie automatically
       const { data } = await api.get("/auth/me", { withCredentials: true });
       return data.user;
-    } catch(err) {
-      console.error("loadUser error:", err);
-      return rejectWithValue({ message: "Failed to load user" });
+    } catch {
+      return rejectWithValue(null);
     }
   }
 );
 
-// Login
+// Login (Server sets both access and refresh cookies)
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (credentials, { rejectWithValue, dispatch }) => {
     try {
       const { data } = await api.post("/auth/login", credentials, { withCredentials: true });
+      // If successful, the server set the httpOnly cookies. Now load user data.
       await dispatch(loadUser());
       return data;
     } catch (err) {
@@ -73,11 +75,12 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// Logout
+// Logout (Server clears both access and refresh cookies)
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
+      // The server clears the httpOnly cookies in the response
       const { data } = await api.get("/auth/logout", { withCredentials: true });
       return data;
     } catch (err) {
@@ -87,23 +90,24 @@ export const logoutUser = createAsyncThunk(
 );
 
 // Forgot Password
-export const forgotPassword = createAsyncThunk( // Corrected function name
-  "auth/forgotPassword",
-  async (emailData, { rejectWithValue }) => {
-    try {
-      const { data } = await api.post("/auth/forgot-password", emailData, { withCredentials: true });
-      return data;
-    } catch (err) {
-      return rejectWithValue(err.response?.data);
-    }
-  }
+export const forgotPassword = createAsyncThunk( 
+  "auth/forgotPassword",
+  async (emailData, { rejectWithValue }) => {
+    try {
+      const { data } = await api.post("/auth/forgot-password", emailData, { withCredentials: true });
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data);
+    }
+  }
 );
 
-// Reset Password
+// Reset Password (Server sets new access and refresh cookies)
 export const resetPassword = createAsyncThunk(
   "auth/resetPassword",
   async ({ token, passwords }, { rejectWithValue }) => {
     try {
+      // Server handles hashing and setting new cookies
       const { data } = await api.put(`/auth/reset-password/${token}`, passwords, { withCredentials: true });
       return data;
     } catch (err) {
@@ -131,7 +135,7 @@ export const updateProfile = createAsyncThunk(
   async (profileData, { rejectWithValue }) => {
     try {
       const { data } = await api.put("/user/update-profile", profileData, {
-        headers: {"Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
       return data;
@@ -163,12 +167,10 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     const handlePending = (state) => { state.loading = true; };
-    const handleRejected = (state, { payload, error }) => {
-  state.loading = false;
-  if (payload?.message) toast.error(payload.message);
-  else if (error?.message) toast.error(error.message);
-};
-
+    const handleRejected = (state, { payload }) => {
+      state.loading = false;
+      if (payload?.message) toast.error(payload.message);
+    };
 
     builder
       // register / OTP
