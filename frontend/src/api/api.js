@@ -3,9 +3,10 @@ import { toast } from "react-toastify";
 
 // Create Axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ,
-  withCredentials: true, // always send cookies
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true, // required for cookies
 });
+
 
 let isRefreshing = false;
 let failedQueue = [];
