@@ -55,21 +55,20 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { data } = await axios.post(`${api.defaults.baseURL}/auth/refresh-token`, {}, { withCredentials: true });
-        const newToken = data.token;
-        processQueue(null, newToken);
+  const { data } = await axios.post(`${api.defaults.baseURL}/auth/refresh-token`, {}, { withCredentials: true });
+  const newToken = data.token; // <-- fix this
+  originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+  processQueue(null, newToken);
+  return api(originalRequest);
+} catch (refreshError) {
+  processQueue(refreshError, null);
+  toast.error("Session expired. Please log in again.");
+  window.location.href = "/login";
+  return Promise.reject(refreshError);
+} finally {
+  isRefreshing = false;
+}
 
-        return api(originalRequest);
-      } catch (refreshError) {
-         processQueue(refreshError, null);
-        toast.error("Session expired. Please log in again.");
-       
-        window.location.href = "/login"; // Redirect to login
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
-      }
-    }
     
     // For other errors, just reject the promise
     return Promise.reject(error);
